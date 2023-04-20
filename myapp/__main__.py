@@ -5,7 +5,7 @@ import sys
 
 from myapp.application import MyApp
 
-APP_NAME = "MyApp"
+APP_NAME = "Knitted"
 APP_VERSION = 1.0
 
 # Helper function to ensure we capture stack traces via logging
