@@ -90,10 +90,10 @@ class YarnCollectionApp:
         color = self.colorEntry.get()
         weight = self.weightEntry.get()
         material = self.materialEntry.get()
-        self.collection.addYarn(color, weight, material)
+        self.collection.addyarn(color, weight, material)
         self.updateListboxes()
 
-    def updateListboxes(self):
+    def updateListbox(self):
         self.colorListbox.delete(0, tk.END)
         self.weightListbox.delete(0, tk.END)
         self.materialListbox.delete(0, tk.END)
