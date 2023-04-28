@@ -4,15 +4,20 @@ import tkinter as tk
 class MyApp:
     def __init__(self, master):
         self.master = master
-        master.title("My App")
-
-    def run(self):
-        self.master.mainloop()
+        master.title("Knitted")
 
 
 def addToIndex(key, index, yarn):
     index.setdefault(key, [])
     index[key].append(yarn)
+
+
+def showHelp():
+    print("Help information goes here")
+
+
+def showAbout():
+    print("About", "This app was created by Savannah Smith for the Knitting lovers of the world.")
 
 
 class YarnCollection:
@@ -42,8 +47,10 @@ class YarnCollection:
 
 class YarnCollectionApp:
     def __init__(self, master):
+        self.showAbout = master
+        self.showHelp = master
         self.master = master
-        master.title("Yarn Collection")
+        master.title("Knitted: Yarn Collection")
 
         self.collection = YarnCollection()
 
@@ -90,8 +97,8 @@ class YarnCollectionApp:
         color = self.colorEntry.get()
         weight = self.weightEntry.get()
         material = self.materialEntry.get()
-        self.collection.addyarn(color, weight, material)
-        self.updateListboxes()
+        self.collection.addYarn(color, weight, material)
+        self.updateListbox()
 
     def updateListbox(self):
         self.colorListbox.delete(0, tk.END)
@@ -99,12 +106,15 @@ class YarnCollectionApp:
         self.materialListbox.delete(0, tk.END)
 
         for color in sorted(self.collection.colors):
-            self.coloListbox.insert(tk.END, color)
+            self.colorListbox.insert(tk.END, color)
             for yarn in self.collection.getYarnsByColor(color):
                 self.colorListbox.insert(tk.END, f"  {yarn[1]}")
+
+    def run(self):
+        self.master.mainloop()
 
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = MyApp(root)
+    app = YarnCollectionApp(root)
     app.run()
