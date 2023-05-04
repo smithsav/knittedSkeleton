@@ -47,8 +47,6 @@ class YarnCollection:
 
 class YarnCollectionApp:
     def __init__(self, master):
-        self.showAbout = master
-        self.showHelp = master
         self.master = master
         master.title("Knitted: Yarn Collection")
 
@@ -84,14 +82,50 @@ class YarnCollectionApp:
         self.materialListbox = tk.Listbox(master)
         self.materialListbox.grid(row=4, column=2)
 
-        self.helpButton = tk.Button(master, text="Help", command=self.showHelp)
+        self.helpButton = tk.Button(master, text="Help", command=self.showHelpWindow)
         self.helpButton.grid(row=5, column=0)
 
-        self.aboutButton = tk.Button(master, text="About", command=self.showAbout)
+        self.aboutButton = tk.Button(master, text="About", command=self.showAboutWindow)
         self.aboutButton.grid(row=5, column=1)
 
         self.exitButton = tk.Button(master, text="Exit", command=master.quit)
         self.exitButton.grid(row=5, column=2)
+
+    def updateListbox(self):
+        self.colorListbox.delete(0, tk.END)
+        self.weightListbox.delete(0, tk.END)
+        self.materialListbox.delete(0, tk.END)
+
+        yarns = []
+        for yarn in self.collection.collection:
+            color, weight, material = yarn
+            yarns.append({"color": color, "weight": weight, "material": material})
+
+        for yarn in yarns:
+            self.colorListbox.insert(tk.END, yarn["color"])
+            self.weightListbox.insert(tk.END, yarn["weight"])
+            self.materialListbox.insert(tk.END, yarn["material"])
+
+        # Bind the list boxes together, so they highlight the same item
+        self.colorListbox.bind('<<ListboxSelect>>', lambda event: self.syncListBoxes(event, self.colorListbox,
+                                                                                     self.weightListbox,
+                                                                                     self.materialListbox))
+        self.weightListbox.bind('<<ListboxSelect>>', lambda event: self.syncListBoxes(event, self.weightListbox,
+                                                                                      self.colorListbox,
+                                                                                      self.materialListbox))
+        self.materialListbox.bind('<<ListboxSelect>>', lambda event: self.syncListBoxes(event, self.materialListbox,
+                                                                                        self.colorListbox,
+                                                                                        self.weightListbox))
+
+    def syncListBoxes(self, source, dest1, dest2):
+        # Synchronize the selected item in source with dest1 and dest2
+        selected = source.curselection()
+        if selected:
+            index = selected[0]
+            dest1.selection_clear(0, tk.END)
+            dest1.selection_set(index)
+            dest2.selection_clear(0, tk.END)
+            dest2.selection_set(index)
 
     def addYarn(self):
         color = self.colorEntry.get()
@@ -100,15 +134,28 @@ class YarnCollectionApp:
         self.collection.addYarn(color, weight, material)
         self.updateListbox()
 
-    def updateListbox(self):
-        self.colorListbox.delete(0, tk.END)
-        self.weightListbox.delete(0, tk.END)
-        self.materialListbox.delete(0, tk.END)
+    def showHelpWindow(self):
+        help_window = tk.Toplevel(self.master)
+        help_window.title("Help")
+        help_label = tk.Label(help_window, text="You should enter the color of the yarn, "
+                                                "the weight of the yarn (1-superfine, 2-fine,"
+                                                "3-light, 4-medium, 5-bulky, 6-super bulky, 7-jumbo), and "
+                                                "the material of the yarn.")
+        help_label.pack()
 
-        for color in sorted(self.collection.colors):
-            self.colorListbox.insert(tk.END, color)
-            for yarn in self.collection.getYarnsByColor(color):
-                self.colorListbox.insert(tk.END, f"  {yarn[1]}")
+    def showAboutWindow(self):
+        aboutWindow = tk.Toplevel(self.master)
+        aboutWindow.title("About")
+
+        aboutLabel = tk.Label(aboutWindow,
+                               text="Knitted was create for the yarn craft lovers of the world. "
+                                    "When shopping for yarn we tend to forget what's already in our "
+                                    "collection and may end up buying too many of the same product. "
+                                    "So I created Knitted to help resolve this problem.")
+        aboutLabel.pack(padx=20, pady=20)
+
+        okButton = tk.Button(aboutWindow, text="OK", command=aboutWindow.destroy)
+        okButton.pack(pady=10)
 
     def run(self):
         self.master.mainloop()
