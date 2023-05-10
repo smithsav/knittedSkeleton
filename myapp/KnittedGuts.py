@@ -12,14 +12,6 @@ def addToIndex(key, index, yarn):
     index[key].append(yarn)
 
 
-def showHelp():
-    print("Help information goes here")
-
-
-def showAbout():
-    print("About", "This app was created by Savannah Smith for the Knitting lovers of the world.")
-
-
 class YarnCollection:
     def __init__(self):
         self.collection = {}
@@ -142,16 +134,17 @@ class YarnCollectionApp:
                                                 "3-light, 4-medium, 5-bulky, 6-super bulky, 7-jumbo), and "
                                                 "the material of the yarn.")
         help_label.pack()
+        help_window.grab_set()
 
     def showAboutWindow(self):
         aboutWindow = tk.Toplevel(self.master)
         aboutWindow.title("About")
 
         aboutLabel = tk.Label(aboutWindow,
-                               text="Knitted was create for the yarn craft lovers of the world. "
-                                    "When shopping for yarn we tend to forget what's already in our "
-                                    "collection and may end up buying too many of the same product. "
-                                    "So I created Knitted to help resolve this problem.")
+                              text="Knitted was create for the yarn craft lovers of the world. "
+                                   "When shopping for yarn we tend to forget what's already in our "
+                                   "collection and may end up buying too many of the same product. "
+                                   "So I created Knitted to help resolve this problem.")
         aboutLabel.pack(padx=20, pady=20)
 
         okButton = tk.Button(aboutWindow, text="OK", command=aboutWindow.destroy)
