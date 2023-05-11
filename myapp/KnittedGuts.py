@@ -1,4 +1,3 @@
-from PIL import Image, ImageTk
 import tkinter as tk
 
 
@@ -6,15 +5,6 @@ class MyApp:
     def __init__(self, master):
         self.master = master
         master.title("Knitted")
-
-        # Open image file and create a PhotoImage object
-        image = Image.open("C:/users/smith/OneDrive/SDEV 140/knittedmainimg.jpg")
-        photo = ImageTk.PhotoImage(image)
-
-        # Create a label and set the PhotoImage as its image
-        self.image_label = tk.Label(master, image=photo)
-        self.image_label.image = photo  # Keep a reference to prevent garbage collection
-        self.image_label.pack()
 
 
 def addToIndex(key, index, yarn):
