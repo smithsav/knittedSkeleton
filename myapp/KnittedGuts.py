@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 
 class MyApp:
@@ -57,6 +58,24 @@ def syncListBoxes(source, dest1, dest2):
         dest2.selection_clear(0, tk.END)
         dest2.selection_set(index)
 
+# validate color
+def validate_color(color):
+    valid_colors = ["red", "blue", "green", "yellow"]  # list of valid colors
+    if color not in valid_colors:
+        raise ValueError(f"Invalid color: {color}. Please choose from {valid_colors}.")
+
+# validate weight
+def validate_weight(weight):
+    valid_weights = ['1', '2', '3', '4', '5', '6', '7'] # list of valid weights
+    if weight not in valid_weights:
+        raise ValueError(f"Invalid weight: {weight}. Please choose from {valid_weights}.")
+
+# validate material
+def validate_material(material):
+    valid_materials = ['cotton', 'wool', 'synthetic'] #list of valid materials
+    if material not in valid_materials:
+        raise ValueError(f"Invalid material: {material}. Please choose from {valid_materials}.")
+
 
 class YarnCollectionApp:
     def __init__(self, master):
@@ -113,28 +132,6 @@ class YarnCollectionApp:
         self.exitButton = tk.Button(master, text="Exit", command=master.quit)
         self.exitButton.grid(row=5, column=2)
 
-    # validate color
-    def validate_color(self, valid_colors=None):
-        if valid_colors is None:
-            valid_colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'black', 'gray', 'white',
-                            'beige',
-                            'neutral multi', 'colorful multi']
-        if self not in valid_colors:
-            raise ValueError("Invalid color: {}".format(self))
-
-    # validate weight
-    def validate_weight(self, valid_weights=None):
-        if valid_weights is None:
-            valid_weights = ['1, 2, 3, 4, 5, 6, 7']
-        if self not in valid_weights:
-            raise ValueError("Invalid weight: {}".format(self))
-
-    # validate material
-    def validate_material(self, valid_materials=None):
-        if valid_materials is None:
-            valid_materials = ['cotton', 'wool', 'synthetic']
-        if self not in valid_materials:
-            raise ValueError("Invalid material: {}".format(self))
 
     def updateListbox(self):
         """
@@ -172,9 +169,13 @@ class YarnCollectionApp:
         color = self.colorEntry.get()
         weight = self.weightEntry.get()
         material = self.materialEntry.get()
-        self.validate_color(color)  # perform validation check
-        self.validate_weight(weight)  # perform validation check
-        self.validate_material(material)  # perform validation check
+        try:
+            validate_color(color)  # perform validation check
+            validate_weight(weight)  # perform validation check
+            validate_material(material)  # perform validation check
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
+            return
         self.collection.addYarn(color, weight, material)
         self.updateListbox()
 

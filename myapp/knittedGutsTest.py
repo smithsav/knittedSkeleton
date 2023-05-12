@@ -1,52 +1,74 @@
+from KnittedGuts import YarnCollection, validate_color, validate_material, validate_weight
 import unittest
-import tkinter as tk
-from unittest.mock import MagicMock
+from unittest.mock import patch
+from io import StringIO
+from tkinter import Tk
+from app import YarnCollection
 
-from myapp import MyApp, YarnCollection, YarnCollectionApp
 
-
-class TestYarnCollectionApp(unittest.TestCase):
-    def setUp(self):
-        root = tk.Tk()
-        self.app = YarnCollectionApp(root)
+class TestYarnCollection(unittest.TestCase):
 
     def test_addYarn(self):
-        self.app.colorEntry.insert(0, "red")
-        self.app.weightEntry.insert(0, "3")
-        self.app.materialEntry.insert(0, "cotton")
-        self.app.addYarn()
-        self.assertEqual(self.app.colorListbox.get(0), "red")
-        self.assertEqual(self.app.weightListbox.get(0), "3")
-        self.assertEqual(self.app.materialListbox.get(0), "cotton")
+        yarnCollection = YarnCollection()
+        yarnCollection.addYarn("red", "1", "cotton")
+        self.assertEqual(len(yarnCollection.collection), 1)
+        self.assertEqual(yarnCollection.collection[("red", "1", "cotton")], 1)
 
-    def test_showHelpWindow(self):
-        self.app.showHelpWindow()
-        help_window = self.app.children["!toplevel"][".!toplevel"]
-        help_label = help_window.children["!label"]
-        self.assertEqual(help_label.cget("text"), "You should enter the color of the yarn, "
-                                                 "the weight of the yarn (1-superfine, 2-fine,"
-                                                 "3-light, 4-medium, 5-bulky, 6-super bulky, 7-jumbo), and "
-                                                 "the material of the yarn.")
+        # Test adding yarn with existing properties
+        yarnCollection.addYarn("red", "1", "cotton")
+        self.assertEqual(len(yarnCollection.collection), 1)
+        self.assertEqual(yarnCollection.collection[("red", "1", "cotton")], 2)
 
-    def test_showAboutWindow(self):
-        self.app.showAboutWindow()
-        about_window = self.app.children["!toplevel"][".!toplevel"]
-        about_label = about_window.children["!label"]
-        self.assertTrue(about_label.cget("text").startswith("Knitted was create for the yarn craft lovers"))
+    def test_getYarnsByColor(self):
+        yarnCollection = YarnCollection()
+        yarnCollection.addYarn("red", "1", "cotton")
+        yarnCollection.addYarn("blue", "2", "wool")
+        yarnCollection.addYarn("red", "3", "synthetic")
 
-    def test_syncListBoxes(self):
-        source = MagicMock()
-        dest1 = MagicMock()
-        dest2 = MagicMock()
-        source.curselection.return_value = [0]
-        self.app.syncListBoxes(source, dest1, dest2)
-        dest1.selection_clear.assert_called_once_with(0, tk.END)
-        dest1.selection_set.assert_called_once_with(0)
-        dest2.selection_clear.assert_called_once_with(0, tk.END)
-        dest2.selection_set.assert_called_once_with(0)
+        self.assertEqual(len(yarnCollection.getYarnsByColor("red")), 2)
+        self.assertEqual(len(yarnCollection.getYarnsByColor("green")), 0)
 
-    def tearDown(self):
-        self.app.master.destroy()
+    def test_getYarnsByWeight(self):
+        yarnCollection = YarnCollection()
+        yarnCollection.addYarn("red", "1", "cotton")
+        yarnCollection.addYarn("blue", "2", "wool")
+        yarnCollection.addYarn("red", "3", "synthetic")
+
+        self.assertEqual(len(yarnCollection.getYarnsByWeight("1")), 1)
+        self.assertEqual(len(yarnCollection.getYarnsByWeight("4")), 0)
+
+    def test_getYarnsByMaterial(self):
+        yarnCollection = YarnCollection()
+        yarnCollection.addYarn("red", "1", "cotton")
+        yarnCollection.addYarn("blue", "2", "wool")
+        yarnCollection.addYarn("red", "3", "synthetic")
+
+        self.assertEqual(len(yarnCollection.getYarnsByMaterial("cotton")), 1)
+        self.assertEqual(len(yarnCollection.getYarnsByMaterial("silk")), 0)
+
+    def test_validate_color(self):
+        # Test with a valid color
+        self.assertIsNone(validate_color("red"))
+
+        # Test with an invalid color
+        with self.assertRaises(ValueError):
+            validate_color("orange")
+
+    def test_validate_weight(self):
+        # Test with a valid weight
+        self.assertIsNone(validate_weight("1"))
+
+        # Test with an invalid weight
+        with self.assertRaises(ValueError):
+            validate_weight("0")
+
+    def test_validate_material(self):
+        # Test with a valid material
+        self.assertIsNone(validate_material("wool"))
+
+        # Test with an invalid material
+        with self.assertRaises(ValueError):
+            validate_material("nylon")
 
 
 if __name__ == '__main__':
