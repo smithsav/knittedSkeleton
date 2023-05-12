@@ -18,7 +18,7 @@ Enter the color of the yarn in the "Color" field (red, orange, yellow, green, bl
 beige, neutral multi,colorful multi).
 Enter the weight of the yarn in the "Weight" field (1-superfine, 2-fine,3-light, 4-medium, 5-bulky, 6-super bulky,
 7-jumbo).
-Enter the material of the yarn in the "Material" field (cotton, synthetic, wool).
+Enter the material of the yarn in the "Material" field (cotton, wool, synthetic).
 Click the "Add Yarn" button to add the new yarn to your collection.
 Viewing your yarn collection
 To view your current yarn collection, look at the three list boxes in the middle of the Knitted window.
@@ -32,7 +32,8 @@ Exiting Knitted
 To exit Knitted, click the "Exit" button or close the Knitted window.
 
 Troubleshooting
-If you experience any issues while using Knitted, please reach out to the app's creator for support.
+If you experience any issues while using Knitted, try the help button for information or please reach out to the app's
+creator for support.
 
 Conclusion
 I hope you enjoy using Knitted to organize and keep track of your yarn collection!

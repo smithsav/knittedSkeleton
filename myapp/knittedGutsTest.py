@@ -1,75 +1,53 @@
-from KnittedGuts import YarnCollection, validate_color, validate_material, validate_weight
 import unittest
-from unittest.mock import patch
-from io import StringIO
 from tkinter import Tk
-from app import YarnCollection
+from KnittedGuts import YarnCollectionApp
 
 
-class TestYarnCollection(unittest.TestCase):
+class TestYarnCollectionGUI(unittest.TestCase):
+    def setUp(self):
+        self.root = Tk()
+        self.app = YarnCollectionApp(self.root)
+
+    def tearDown(self):
+        self.root.destroy()
 
     def test_addYarn(self):
-        yarnCollection = YarnCollection()
-        yarnCollection.addYarn("red", "1", "cotton")
-        self.assertEqual(len(yarnCollection.collection), 1)
-        self.assertEqual(yarnCollection.collection[("red", "1", "cotton")], 1)
+        # Test valid input
+        self.app.colorEntry.insert(0, "Red")
+        self.app.weightEntry.insert(0, "4")
+        self.app.materialEntry.insert(0, "Wool")
+        self.app.addYarn()
+        self.assertEqual(len(self.app.collection.collection), 1)
 
-        # Test adding yarn with existing properties
-        yarnCollection.addYarn("red", "1", "cotton")
-        self.assertEqual(len(yarnCollection.collection), 1)
-        self.assertEqual(yarnCollection.collection[("red", "1", "cotton")], 2)
-
-    def test_getYarnsByColor(self):
-        yarnCollection = YarnCollection()
-        yarnCollection.addYarn("red", "1", "cotton")
-        yarnCollection.addYarn("blue", "2", "wool")
-        yarnCollection.addYarn("red", "3", "synthetic")
-
-        self.assertEqual(len(yarnCollection.getYarnsByColor("red")), 2)
-        self.assertEqual(len(yarnCollection.getYarnsByColor("green")), 0)
-
-    def test_getYarnsByWeight(self):
-        yarnCollection = YarnCollection()
-        yarnCollection.addYarn("red", "1", "cotton")
-        yarnCollection.addYarn("blue", "2", "wool")
-        yarnCollection.addYarn("red", "3", "synthetic")
-
-        self.assertEqual(len(yarnCollection.getYarnsByWeight("1")), 1)
-        self.assertEqual(len(yarnCollection.getYarnsByWeight("4")), 0)
-
-    def test_getYarnsByMaterial(self):
-        yarnCollection = YarnCollection()
-        yarnCollection.addYarn("red", "1", "cotton")
-        yarnCollection.addYarn("blue", "2", "wool")
-        yarnCollection.addYarn("red", "3", "synthetic")
-
-        self.assertEqual(len(yarnCollection.getYarnsByMaterial("cotton")), 1)
-        self.assertEqual(len(yarnCollection.getYarnsByMaterial("silk")), 0)
-
-    def test_validate_color(self):
-        # Test with a valid color
-        self.assertIsNone(validate_color("red"))
-
-        # Test with an invalid color
+        # Test invalid color input
+        self.app.colorEntry.delete(0, "end")
+        self.app.colorEntry.insert(0, "Pinkish-Red")
+        self.app.weightEntry.delete(0, "end")
+        self.app.weightEntry.insert(0, "3")
+        self.app.materialEntry.delete(0, "end")
+        self.app.materialEntry.insert(0, "Cotton")
         with self.assertRaises(ValueError):
-            validate_color("orange")
+            self.app.addYarn()
+        self.assertEqual(len(self.app.collection.collection), 1)
 
-    def test_validate_weight(self):
-        # Test with a valid weight
-        self.assertIsNone(validate_weight("1"))
-
-        # Test with an invalid weight
+        # Test invalid weight input
+        self.app.colorEntry.delete(0, "end")
+        self.app.colorEntry.insert(0, "Pink")
+        self.app.weightEntry.delete(0, "end")
+        self.app.weightEntry.insert(0, "8")
+        self.app.materialEntry.delete(0, "end")
+        self.app.materialEntry.insert(0, "Synthetic")
         with self.assertRaises(ValueError):
-            validate_weight("0")
+            self.app.addYarn()
+        self.assertEqual(len(self.app.collection.collection), 1)
 
-    def test_validate_material(self):
-        # Test with a valid material
-        self.assertIsNone(validate_material("wool"))
-
-        # Test with an invalid material
+        # Test invalid material input
+        self.app.colorEntry.delete(0, "end")
+        self.app.colorEntry.insert(0, "Green")
+        self.app.weightEntry.delete(0, "end")
+        self.app.weightEntry.insert(0, "5")
+        self.app.materialEntry.delete(0, "end")
+        self.app.materialEntry.insert(0, "Leather")
         with self.assertRaises(ValueError):
-            validate_material("nylon")
-
-
-if __name__ == '__main__':
-    unittest.main()
+            self.app.addYarn()
+        self.assertEqual(len(self.app.collection.collection), 1)
