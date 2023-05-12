@@ -14,9 +14,11 @@ run Knitted by running the knitted.py file in your terminal or IDE.
 Adding yarn
 To add a new yarn to your collection, follow these steps:
 
-Enter the color of the yarn in the "Color" field.
-Enter the weight of the yarn in the "Weight" field. The weight scale ranges from 1 (superfine) to 7 (jumbo).
-Enter the material of the yarn in the "Material" field.
+Enter the color of the yarn in the "Color" field (red, orange, yellow, green, blue, purple, pink, black, gray, white,
+beige, neutral multi,colorful multi).
+Enter the weight of the yarn in the "Weight" field (1-superfine, 2-fine,3-light, 4-medium, 5-bulky, 6-super bulky,
+7-jumbo).
+Enter the material of the yarn in the "Material" field (cotton, synthetic, wool).
 Click the "Add Yarn" button to add the new yarn to your collection.
 Viewing your yarn collection
 To view your current yarn collection, look at the three list boxes in the middle of the Knitted window.

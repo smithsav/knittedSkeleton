@@ -113,6 +113,29 @@ class YarnCollectionApp:
         self.exitButton = tk.Button(master, text="Exit", command=master.quit)
         self.exitButton.grid(row=5, column=2)
 
+    # validate color
+    def validate_color(self, valid_colors=None):
+        if valid_colors is None:
+            valid_colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'black', 'gray', 'white',
+                            'beige',
+                            'neutral multi', 'colorful multi']
+        if self not in valid_colors:
+            raise ValueError("Invalid color: {}".format(self))
+
+    # validate weight
+    def validate_weight(self, valid_weights=None):
+        if valid_weights is None:
+            valid_weights = ['1, 2, 3, 4, 5, 6, 7']
+        if self not in valid_weights:
+            raise ValueError("Invalid weight: {}".format(self))
+
+    # validate material
+    def validate_material(self, valid_materials=None):
+        if valid_materials is None:
+            valid_materials = ['cotton', 'wool', 'synthetic']
+        if self not in valid_materials:
+            raise ValueError("Invalid material: {}".format(self))
+
     def updateListbox(self):
         """
         Update the list boxes with the current collection of yarns.
@@ -143,20 +166,29 @@ class YarnCollectionApp:
         self.materialListbox.bind('<<ListboxSelect>>', lambda event: syncListBoxes(event, self.materialListbox,
                                                                                    self.colorListbox))
 
+
+
     def addYarn(self):
         color = self.colorEntry.get()
         weight = self.weightEntry.get()
         material = self.materialEntry.get()
+        self.validate_color(color)  # perform validation check
+        self.validate_weight(weight)  # perform validation check
+        self.validate_material(material)  # perform validation check
         self.collection.addYarn(color, weight, material)
         self.updateListbox()
+
+
 
     def showHelpWindow(self):
         help_window = tk.Toplevel(self.master)
         help_window.title("Help")
-        help_label = tk.Label(help_window, text="You should enter the color of the yarn, "
+        help_label = tk.Label(help_window, text="You should enter the color of the yarn (red, orange, yellow, green,"
+                                                "blue, purple, pink, black, gray, white, beige, neutral multi, "
+                                                "colorful multi, "
                                                 "the weight of the yarn (1-superfine, 2-fine,"
                                                 "3-light, 4-medium, 5-bulky, 6-super bulky, 7-jumbo), and "
-                                                "the material of the yarn.")
+                                                "the material of the yarn (cotton, synthetic, wool.")
         help_label.pack()
         help_window.grab_set()
 
